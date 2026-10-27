@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoneyChange | Currency Exchange Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--green:#13834a;--green2:#1ca45d;--dark:#103b2b;--mint:#e8f7ee;--bg:#f4f8f5;--text:#173328;--muted:#718078;--line:#e1ebe4;--white:#fff;--shadow:0 8px 28px rgba(16,59,43,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(115deg,#0d3928,#13834a 68%,#20a765);color:white;padding:26px clamp(18px,4vw,54px) 30px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:#ffffff20;display:grid;place-items:center;font-size:25px}.brand h1{margin:0;font-size:23px;letter-spacing:-.5px}.brand p{margin:4px 0 0;color:#d4f2df;font-size:12px}.live{border:1px solid #ffffff50;background:#ffffff16;padding:9px 13px;border-radius:99px;font-size:12px}.hero{margin-top:28px;display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap}.hero h2{font-size:clamp(26px,4vw,38px);margin:0 0 8px;letter-spacing:-1px}.hero p{margin:0;color:#d9f1e2;max-width:610px;line-height:1.55;font-size:14px}.date-note{font-size:12px;color:#d9f1e2}
+main{max-width:1440px;margin:auto;padding:24px clamp(14px,3vw,40px) 42px}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:-2px}.card,.panel{background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.kpi{padding:18px 19px;min-height:122px}.kpi .label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}.kpi .value{font-size:clamp(20px,2.2vw,29px);font-weight:750;letter-spacing:-.7px;margin:13px 0 6px}.kpi .foot{font-size:11px;color:var(--green);font-weight:600}.layout{display:grid;grid-template-columns:minmax(320px,1.05fr) minmax(0,1fr);gap:18px;margin-top:20px}.panel{padding:22px}.panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}.panel h3{margin:0;font-size:17px;letter-spacing:-.25px}.sub{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.45}.tag{background:var(--mint);color:var(--green);border-radius:99px;padding:6px 9px;font-size:11px;font-weight:700;white-space:nowrap}
+.field-label{display:block;font-size:12px;color:var(--muted);font-weight:650;margin:0 0 7px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{width:100%;padding:12px 13px;border:1px solid #d9e6dd;border-radius:11px;background:white;color:var(--text);font-size:14px;outline:none}.field:focus{border-color:var(--green);box-shadow:0 0 0 3px #13834a15}.amount-wrap{margin-bottom:16px}.amount{font-size:24px;font-weight:700;padding:15px}.swaprow{display:flex;align-items:center;justify-content:center;margin:-1px 0 14px}.swap{border:1px solid #cce6d5;background:var(--mint);color:var(--green);width:42px;height:42px;border-radius:13px;font-size:20px;cursor:pointer;transition:.15s}.swap:hover{transform:rotate(180deg)}.result{background:linear-gradient(130deg,#e9f8ee,#f7fcf8);border:1px solid #d2ecd9;border-radius:15px;padding:18px;margin-top:16px}.result small{color:#4d7660;font-size:12px}.result strong{display:block;font-size:clamp(25px,3vw,34px);margin:8px 0;color:#0c6e3b;overflow-wrap:anywhere}.result .rate{font-size:12px;color:#4d7660;line-height:1.6}.primary{width:100%;background:var(--green);border:0;color:white;font-weight:700;padding:13px;border-radius:11px;cursor:pointer;margin-top:15px;font-size:14px}.primary:hover{background:#0c6e3b}.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.quick button{border:1px solid #dce9df;background:white;color:#36634b;border-radius:9px;padding:8px 10px;font-size:12px;cursor:pointer}.quick button:hover{border-color:var(--green);background:var(--mint)}
+.rate-tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.rate-tools select,.rate-tools input{padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--text);font-size:12px}.rate-tools input{min-width:120px;flex:1}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px;min-width:400px}th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:11px 8px;border-bottom:1px solid var(--line)}td{padding:13px 8px;border-bottom:1px solid #edf2ee}tr:last-child td{border-bottom:0}.currency{display:flex;align-items:center;gap:9px;font-weight:700}.flag{width:32px;height:32px;border-radius:10px;background:var(--mint);display:grid;place-items:center;font-size:11px;color:var(--green);font-weight:800}.muted{color:var(--muted);font-size:11px;font-weight:400}.rate-num{font-weight:700;font-variant-numeric:tabular-nums}.positive{color:var(--green);font-size:11px}.negative{color:#c45b48;font-size:11px}.chart-panel{margin-top:18px}.chart-area{height:270px;position:relative}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.insight{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid #edf2ee}.insight:last-child{border:0;padding-bottom:0}.insight-icon{width:34px;height:34px;flex:0 0 34px;border-radius:11px;background:var(--mint);display:grid;place-items:center;color:var(--green);font-size:17px}.insight b{font-size:13px}.insight p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5}.history-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}.history-actions{display:flex;gap:8px}.outline{border:1px solid var(--line);background:white;color:var(--text);padding:8px 10px;border-radius:9px;font-size:11px;cursor:pointer}.status{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5}.status.error{color:#b14b3c}.footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 0}.disclaimer{background:#fff8e8;border:1px solid #f0e3bf;border-radius:12px;padding:12px 14px;color:#7a6530;font-size:11px;line-height:1.5;margin-top:18px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.bottom-grid{grid-template-columns:1fr}}
+@media(max-width:560px){header{padding-top:20px}.kpis{gap:9px}.kpi{padding:14px;min-height:108px}.kpi .value{font-size:21px}.panel{padding:16px}.field-grid{gap:8px}.hero h2{font-size:27px}.chart-area{height:230px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="brand"><div class="logo">⇄</div><div><h1>MoneyChange</h1><p>CURRENCY EXCHANGE DASHBOARD</p></div></div>
+    <div class="live">● <span id="liveLabel">Menghubungkan data kurs…</span></div>
+  </div>
+  <div class="hero"><div><h2>Exchange smarter.<br>Move money confidently.</h2><p>Konversi mata uang, pantau kurs, dan lihat perubahan nilai tukar dalam satu dashboard sederhana dengan tema hijau.</p></div><div class="date-note" id="dateNote">Kurs akan diperbarui saat data tersedia</div></div>
+</header>
+<main>
+  <section class="kpis">
+    <div class="card kpi"><div class="label">💱 Mata uang tersedia</div><div class="value" id="kpiCurrencies">—</div><div class="foot">Pilihan konversi</div></div>
+    <div class="card kpi"><div class="label">🌍 Basis kurs</div><div class="value" id="kpiBase">EUR</div><div class="foot">Basis data referensi API</div></div>
+    <div class="card kpi"><div class="label">📅 Tanggal kurs</div><div class="value" id="kpiDate">—</div><div class="foot">Tanggal data terbaru</div></div>
+    <div class="card kpi"><div class="label">🧮 Konversi sesi ini</div><div class="value" id="kpiConversions">0</div><div class="foot">Perhitungan di halaman ini</div></div>
+  </section>
+
+  <section class="layout">
+    <div class="panel">
+      <div class="panel-head"><div><h3>Currency converter</h3><p class="sub">Masukkan nominal dan pilih mata uang asal serta tujuan.</p></div><span class="tag">CONVERT</span></div>
+      <div class="amount-wrap"><label class="field-label" for="amount">Nominal</label><input class="field amount" id="amount" type="number" min="0" step="any" value="100" placeholder="Masukkan nominal"></div>
+      <div class="field-grid">
+        <div><label class="field-label" for="from">Dari</label><select class="field" id="from"></select></div>
+        <div><label class="field-label" for="to">Ke</label><select class="field" id="to"></select></div>
+      </div>
+      <div class="swaprow"><button class="swap" id="swap" aria-label="Tukar mata uang" title="Tukar mata uang">⇅</button></div>
+      <div class="result"><small>Hasil estimasi konversi</small><strong id="converted">Memuat kurs…</strong><div class="rate" id="rateText">Mengambil data kurs referensi.</div></div>
+      <button class="primary" id="convertBtn">Hitung konversi</button>
+      <div class="quick"><button data-pair="USD-IDR">USD → IDR</button><button data-pair="IDR-USD">IDR → USD</button><button data-pair="EUR-IDR">EUR → IDR</button><button data-pair="GBP-IDR">GBP → IDR</button><button data-pair="JPY-IDR">JPY → IDR</button></div>
+      <p class="status" id="apiStatus">Kurs live membutuhkan koneksi internet.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h3>Exchange rates</h3><p class="sub">Daftar kurs terhadap mata uang basis yang dipilih.</p></div><span class="tag" id="rateTag">LIVE DATA</span></div>
+      <div class="rate-tools" style="margin-bottom:13px"><select id="baseSelect" aria-label="Mata uang basis"></select><input id="searchCurrency" type="search" placeholder="Cari kode / nama mata uang…"></div>
+      <div class="table-wrap"><table><thead><tr><th>Mata uang</th><th>Kode</th><th>Kurs</th><th>Per 1 basis</th></tr></thead><tbody id="ratesBody"><tr><td colspan="4">Memuat data kurs…</td></tr></tbody></table></div>
+      <p class="status">Kurs referensi menunjukkan nilai tukar indikatif, bukan jaminan harga transaksi money changer.</p>
+    </div>
+  </section>
+
+  <section class="panel chart-panel">
+    <div class="panel-head"><div><h3>Exchange rate trend</h3><p class="sub" id="trendSubtitle">Grafik riwayat kurs 30 hari untuk pasangan mata uang yang dipilih.</p></div><span class="tag">30 DAYS</span></div>
+    <div class="field-grid" style="max-width:430px;margin-bottom:15px">
+      <div><label class="field-label" for="trendFrom">Mata uang asal</label><select class="field" id="trendFrom"></select></div>
+      <div><label class="field-label" for="trendTo">Mata uang tujuan</label><select class="field" id="trendTo"></select></div>
+    </div>
+    <div class="chart-area"><canvas id="trendChart"></canvas></div>
+    <p class="status" id="trendStatus">Grafik akan ditampilkan setelah data riwayat tersedia.</p>
+  </section>
+
+  <section class="bottom-grid">
+    <div class="panel"><div class="panel-head"><div><h3>Conversion history</h3><p class="sub">Riwayat konversi yang dihitung selama sesi ini.</p></div><div class="history-actions"><button class="outline" id="exportHistory">Ekspor CSV</button><button class="outline" id="clearHistory">Hapus</button></div></div><div class="table-wrap"><table><thead><tr><th>Nominal asal</th><th>Hasil</th><th>Waktu</th></tr></thead><tbody id="historyBody"><tr><td colspan="3" class="history-empty">Belum ada konversi. Klik “Hitung konversi”.</td></tr></tbody></table></div></div>
+    <div class="panel"><div class="panel-head"><div><h3>Quick insights</h3><p class="sub">Panduan singkat untuk membaca kurs dan mengelola konversi.</p></div><span class="tag">GUIDE</span></div>
+      <div class="insight"><div class="insight-icon">↗</div><div><b>Periksa arah pasangan kurs</b><p>Nilai 1 USD → IDR berbeda makna dengan 1 IDR → USD. Pastikan mata uang asal dan tujuan sesuai kebutuhan.</p></div></div>
+      <div class="insight"><div class="insight-icon">◷</div><div><b>Bandingkan tanggal data</b><p>Kurs referensi dapat tertinggal dari harga transaksi aktual. Perhatikan tanggal kurs sebelum mengambil keputusan.</p></div></div>
+      <div class="insight"><div class="insight-icon">✓</div><div><b>Perhitungkan biaya transaksi</b><p>Money changer atau bank dapat menerapkan spread, komisi, dan biaya lain yang tidak tercakup dalam hasil estimasi ini.</p></div></div>
+    </div>
+  </section>
+  <div class="disclaimer"><b>Catatan:</b> Dashboard ini adalah alat edukasi dan estimasi kurs, bukan layanan penukaran uang atau saran investasi. Data kurs diambil dari Frankfurter API (kurs referensi); penggunaan data live memerlukan koneksi internet. Jika API tidak tersedia, aplikasi menampilkan kurs fallback untuk demonstrasi yang diberi label estimasi.</div>
+  <div class="footer">MoneyChange Dashboard · Green Edition · Single-file HTML · Data kurs: Frankfurter API</div>
+</main>
+<script>
+const currencies = {
+  AUD:"Australian Dollar", BGN:"Bulgarian Lev", BRL:"Brazilian Real", CAD:"Canadian Dollar", CHF:"Swiss Franc", CNY:"Chinese Yuan", CZK:"Czech Koruna", DKK:"Danish Krone", EUR:"Euro", GBP:"British Pound", HKD:"Hong Kong Dollar", HUF:"Hungarian Forint", IDR:"Indonesian Rupiah", ILS:"Israeli New Shekel", INR:"Indian Rupee", ISK:"Icelandic Krona", JPY:"Japanese Yen", KRW:"South Korean Won", MXN:"Mexican Peso", MYR:"Malaysian Ringgit", NOK:"Norwegian Krone", NZD:"New Zealand Dollar", PHP:"Philippine Peso", PLN:"Polish Zloty", RON:"Romanian Leu", SEK:"Swedish Krona", SGD:"Singapore Dollar", THB:"Thai Baht", TRY:"Turkish Lira", USD:"US Dollar", ZAR:"South African Rand"
+};
+const fallback = {USD:1.08,IDR:17400,GBP:.84,JPY:163.5,AUD:1.65,CAD:1.48,CHF:.96,CNY:7.8,SGD:1.45,MYR:4.65,THB:39.1,KRW:1470,INR:90,EUR:1,PHP:61, NZD:1.79};
+let rates = {...fallback}, base = "EUR", rateDate = "—", liveData = false, conversionCount = 0, history = [], chart;
+const $ = id => document.getElementById(id);
+const fmt = (n, code) => {
+  try { return new Intl.NumberFormat('id-ID',{style:'currency',currency:code,maximumFractionDigits: code==='IDR'||code==='JPY'||code==='KRW'?0:2}).format(n); }
+  catch(e){ return `${code} ${Number(n).toLocaleString('id-ID',{maximumFractionDigits:2})}`; }
+};
+const numFmt = n => Number(n).toLocaleString('id-ID',{maximumFractionDigits:5});
+function fillSelect(el, selected) {
+  el.innerHTML = Object.entries(currencies).map(([code,name])=>`<option value="${code}" ${code===selected?'selected':''}>${code} — ${name}</option>`).join('');
+}
+function populateSelects(){
+  fillSelect($('from'),'USD'); fillSelect($('to'),'IDR'); fillSelect($('trendFrom'),'USD'); fillSelect($('trendTo'),'IDR');
+  $('baseSelect').innerHTML = Object.entries(currencies).map(([code,name])=>`<option value="${code}" ${code===base?'selected':''}>${code} — ${name}</option>`).join('');
+}
+function crossRate(from,to){
+  if(from===to) return 1;
+  const fromPerBase = from===base ? 1 : rates[from];
+  const toPerBase = to===base ? 1 : rates[to];
+  if(!fromPerBase || !toPerBase) return null;
+  return toPerBase/fromPerBase;
+}
+function renderConverter(){
+  const amount = Number($('amount').value)||0, from=$('from').value, to=$('to').value, r=crossRate(from,to);
+  $('converted').textContent = r===null ? 'Kurs tidak tersedia' : fmt(amount*r,to);
+  $('rateText').textContent = r===null ? 'Coba pilih pasangan mata uang lain.' : `1 ${from} = ${numFmt(r)} ${to} · 1 ${to} = ${numFmt(1/r)} ${from}`;
+}
+function renderRates(){
+  const q=$('searchCurrency').value.toLowerCase(), tbody=$('ratesBody');
+  const entries=Object.entries(currencies).filter(([code,name])=>code!==base && `${code} ${name}`.toLowerCase().includes(q));
+  if(!entries.length){tbody.innerHTML='<tr><td colspan="4">Tidak ada mata uang yang cocok.</td></tr>';return;}
+  tbody.innerHTML=entries.map(([code,name])=>{
+    const r=rates[code], flag=code.slice(0,2);
+    return `<tr><td><div class="currency"><span class="flag">${flag}</span><span>${name}<div class="muted">Referensi kurs</div></span></div></td><td><b>${code}</b></td><td class="rate-num">${r?numFmt(r):'—'}</td><td class="muted">1 ${base} = ${r?numFmt(r):'—'} ${code}</td></tr>`;
+  }).join('');
+}
+function updateKpis(){
+  $('kpiCurrencies').textContent=Object.keys(rates).length;
+  $('kpiBase').textContent=base;
+  $('kpiDate').textContent=rateDate;
+  $('kpiConversions').textContent=conversionCount;
+  $('dateNote').textContent=`Tanggal kurs: ${rateDate}`;
+  $('liveLabel').textContent=liveData?'Kurs referensi diperbarui':'Mode estimasi / fallback';
+  $('rateTag').textContent=liveData?'LIVE DATA':'FALLBACK';
+}
+function convertAndRecord(){
+  const amount=Number($('amount').value),from=$('from').value,to=$('to').value,r=crossRate(from,to);
+  if(!Number.isFinite(amount)||amount<0){$('apiStatus').textContent='Masukkan nominal nol atau lebih.';$('apiStatus').className='status error';return;}
+  if(r===null){$('apiStatus').textContent='Kurs untuk pasangan ini belum tersedia.';$('apiStatus').className='status error';return;}
+  renderConverter(); conversionCount++;
+  history.unshift({amount,from,to,result:amount*r,time:new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})});
+  renderHistory();updateKpis();$('apiStatus').textContent='Konversi dihitung menggunakan kurs referensi yang tersedia.';$('apiStatus').className='status';
+}
+function renderHistory(){
+  $('historyBody').innerHTML=history.length?history.slice(0,12).map(h=>`<tr><td>${fmt(h.amount,h.from)}<div class="muted">${h.from} → ${h.to}</div></td><td class="rate-num">${fmt(h.result,h.to)}</td><td class="muted">${h.time}</td></tr>`).join(''):'<tr><td colspan="3" class="history-empty">Belum ada konversi. Klik “Hitung konversi”.</td></tr>';
+}
+async function loadRates(newBase=base){
+  base=newBase;
+  $('apiStatus').textContent='Mengambil kurs terbaru…';$('apiStatus').className='status';
+  try{
+    const res=await fetch(`https://api.frankfurter.app/latest?from=${encodeURIComponent(base)}`);
+    if(!res.ok) throw new Error('API response '+res.status);
+    const data=await res.json(); rates={...data.rates,[base]:1};rateDate=data.date||new Date().toISOString().slice(0,10);liveData=true;
+    $('apiStatus').textContent='Data kurs referensi berhasil diperbarui dari Frankfurter API.'; $('apiStatus').className='status';
+  }catch(err){
+    rates={...fallback,[base]:1};
+    // Fallback values are illustrative and not intended as live market quotes.
+    rateDate='Estimasi';liveData=false;
+    $('apiStatus').textContent='API tidak dapat dijangkau. Kurs estimasi ditampilkan untuk demonstrasi; jangan gunakan untuk transaksi aktual.';$('apiStatus').className='status error';
+  }
+  $('baseSelect').value=base;updateKpis();renderRates();renderConverter();loadTrend();
+}
+async function loadTrend(){
+  const from=$('trendFrom').value,to=$('trendTo').value;
+  $('trendSubtitle').textContent=`Riwayat 30 hari: ${from} ke ${to}.`;
+  try{
+    const end=new Date(), start=new Date();start.setDate(end.getDate()-30);
+    const iso=d=>d.toISOString().slice(0,10);
+    let labels=[],values=[];
+    if(from===to){labels=[iso(start),iso(end)];values=[1,1];}
+    else{
+      const url=`https://api.frankfurter.app/${iso(start)}..${iso(end)}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+      const res=await fetch(url);if(!res.ok)throw new Error('History unavailable');
+      const data=await res.json();labels=Object.keys(data.rates);values=labels.map(d=>data.rates[d][to]);
+      if(!labels.length)throw new Error('No data');
+    }
+    drawChart(labels,values,from,to);$('trendStatus').textContent='Riwayat kurs referensi berhasil dimuat.';
+  }catch(e){
+    const r=crossRate(from,to);
+    const labels=['Sekarang'],values=[r||0];drawChart(labels,values,from,to);
+    $('trendStatus').textContent='Riwayat 30 hari tidak tersedia saat ini. Grafik hanya menampilkan kurs estimasi saat ini, bukan tren historis.';
+  }
+}
+function drawChart(labels,values,from,to){
+  const ctx=$('trendChart').getContext('2d');if(chart)chart.destroy();
+  chart=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:`1 ${from} dalam ${to}`,data:values,borderColor:'#13834a',backgroundColor:'rgba(28,164,93,.12)',fill:true,tension:.28,pointRadius:labels.length>3?1.5:4,pointHoverRadius:5,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,labels:{usePointStyle:true,boxWidth:7}},tooltip:{callbacks:{label:c=>` ${numFmt(c.parsed.y)} ${to}`}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,maxRotation:0}},y:{beginAtZero:false,grid:{color:'#edf2ee'},ticks:{callback:v=>numFmt(v)}}}}});
+}
+$('convertBtn').addEventListener('click',convertAndRecord);
+$('amount').addEventListener('input',renderConverter);$('from').addEventListener('change',renderConverter);$('to').addEventListener('change',renderConverter);
+$('swap').addEventListener('click',()=>{const a=$('from').value;$('from').value=$('to').value;$('to').value=a;renderConverter();});
+$('baseSelect').addEventListener('change',e=>loadRates(e.target.value));
+$('searchCurrency').addEventListener('input',renderRates);
+$('trendFrom').addEventListener('change',loadTrend);$('trendTo').addEventListener('change',loadTrend);
+document.querySelectorAll('[data-pair]').forEach(b=>b.addEventListener('click',()=>{const [a,c]=b.dataset.pair.split('-');$('from').value=a;$('to').value=c;renderConverter();}));
+$('clearHistory').addEventListener('click',()=>{history=[];renderHistory();});
+$('exportHistory').addEventListener('click',()=>{
+  if(!history.length){alert('Belum ada riwayat untuk diekspor.');return;}
+  const csv=['Nominal Asal,Mata Uang Asal,Hasil,Mata Uang Tujuan,Waktu',...history.map(h=>[h.amount,h.from,h.result,h.to,h.time].join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='moneychange-history.csv';a.click();URL.revokeObjectURL(url);
+});
+populateSelects();renderHistory();loadRates('EUR');
+</script>
+</body>
+</html>
